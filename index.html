@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Camp Jump</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="hud" id="scoreLabel">0000</div>
+
+  <div class="overlay" id="startOverlay">
+    <div class="panel">
+      <h1>Camp Jump</h1>
+      <p>Sobreviva o máximo de tempo possível.</p>
+      <p>Pule os obstáculos usando a barra de espaço.</p>
+      <div class="actions">
+        <button class="btn btn-primary" type="button">Pressione <span id="espaco">ESPAÇO</span> para começar</button>
+      </div>  
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="gameOverOverlay">
+    <div class="panel">
+      <h1>Game Over</h1>
+      <p id="finalScore">Pontuação: 0000</p>
+      <p>Você bateu em um obstáculo</p>
+      <div class="actions">
+        <button class="btn btn-warning" type="button">Reiniciar (<span id="espaco">ESPAÇO</span>)</button>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="game"></canvas>
+
+  <script src="script.js">
+  </script>
+</body>
+</html>
