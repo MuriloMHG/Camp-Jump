@@ -32,8 +32,8 @@ const ASSET_PATHS = {
     'assets/grounds/ground3.png'
     ],
     obstacles: [
-    'assets/obstacles/Box.png',
-    'assets/obstacles/cone.png'
+    'assets/Obstacles/Box.png',
+    'assets/Obstacles/Cone.png'
     ]
 };
 
