@@ -32,8 +32,8 @@ const ASSET_PATHS = {
     'assets/grounds/ground3.png'
     ],
     obstacles: [
-    'assets/Obstacles/Box.png',
-    'assets/Obstacles/Cone.png'
+    'assets/Obstacles/Box.png', // 141x198
+    'assets/Obstacles/Cone.png' // 215x215
     ]
 };
 
@@ -52,6 +52,7 @@ const CONFIG = {
     forestHeight: 350,
     forestOverlap: 150,
     forestFallbackWidth: 720,
+    showHitboxes: false,
     scoreRate: 12,
     playerWidth: 150,
     playerHeight: 150,
@@ -88,6 +89,7 @@ function pick(arr) {
 class Input {
     constructor() {
         this.jumpQueued = false;
+        this.toggleHitboxQueued = false;
         window.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
             e.preventDefault();
@@ -99,6 +101,12 @@ class Input {
     consumeJump() {
         const value = this.jumpQueued;
         this.jumpQueued = false;
+        return value;
+    }
+
+    consumeToggleHitbox() {
+        const value = this.toggleHitboxQueued;
+        this.toggleHitboxQueued = false;
         return value;
     }
 }
@@ -220,10 +228,10 @@ class Player {
 
     getHitbox() {
         return {
-            x: this.x + 18,
-            y: this.y + 20,
-            width: this.width - 36,
-            height: this.height - 24
+            x: this.x + 36,
+            y: this.y + 15,
+            width: this.width - 80,
+            height: this.height - 40
         };
     }
 
@@ -267,12 +275,20 @@ class Obstacle {
     }
 
     getHitbox() {
-    return {
-        x: this.x + 8,
-        y: this.y + 6,
-        width: this.width - 16,
-        height: this.height - 8
-    };
+        if (this.type === 'cone'){
+            return{
+                x: this.x + this.width * 0.18,
+                y: this.y + this.height * 0.15,
+                width: this.width * 0.64,
+                height: this.height * 0.80
+            }
+        }
+        return {
+            x: this.x + this.width * 0.10,
+            y: this.y + this.height * 0.12,
+            width: this.width * 0.80,
+            height: this.height * 0.82
+        };
     }
 }
 
@@ -356,6 +372,7 @@ class Game {
         this.isStarted = false;
         this.isGameOver = false;
         this.score = 0;
+        this.showHitboxes = CONFIG.showHitboxes;
         this.speed = CONFIG.baseSpeed;
         this.obstacleTimer = 0;
         this.nextObstacleSpawn = rand(CONFIG.obstacleSpawnMin, CONFIG.obstacleSpawnMax);
@@ -501,6 +518,10 @@ class Game {
     }
 
     update(dt) {
+        if (this.input.consumeToggleHitbox()) {
+            this.showHitboxes = !this.showHitboxes;
+        }
+
         if (this.input.consumeJump()) {
             if (!this.isStarted && !this.isGameOver) {
             this.start();
@@ -635,6 +656,21 @@ class Game {
         }
 
         this.player.draw();
+
+        if (this.showHitboxes) {
+            ctx.save();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = 'rgba(255, 80, 80, 0.9)';
+            const p = this.player.getHitbox();
+            ctx.strokeRect(p.x, p.y, p.width, p.height);
+
+            ctx.strokeStyle = 'rgba(80, 200, 255, 0.9)';
+            for (const obstacle of this.obstacles) {
+                const o = obstacle.getHitbox();
+                ctx.strokeRect(o.x, o.y, o.width, o.height);
+            }
+            ctx.restore();
+        }
     }
 
     loop(timestamp) {
