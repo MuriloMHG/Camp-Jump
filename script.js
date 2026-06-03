@@ -5,6 +5,15 @@ const startOverlay = document.getElementById('startOverlay');
 const gameOverOverlay = document.getElementById('gameOverOverlay');
 const finalScore = document.getElementById('finalScore');
 
+if (window.NexusGameSDK) {                                                                                                                                                    
+        window.NexusGameSDK.init({                                                                                                                                                
+            gameSlug: 'camp-jump', // Alterado para o slug correto do Camp Jump                                                                                                   
+            onAuth: (auth) => {                                                                                                                                                   
+                console.log("Conectado ao Nexus Hub!", auth);                                                                                                                     
+            }                                                                                                                                                                     
+        });                                                                                                                                                                       
+    }
+
 const AUDIO_ASSETS = {
     background_music: 'assets/audio/background_music.mp3',
     jump: 'assets/audio/jump.wav',
@@ -478,13 +487,27 @@ class Game {
         gameOverOverlay.classList.add('hidden');
     }
 
-    gameOver() {
-        this.audio.stopMusic();
-        this.audio.play('game_over');
-        this.isGameOver = true;
-        finalScore.textContent = `Pontuação: ${String(Math.floor(this.score)).padStart(4, '0')}`;
-        gameOverOverlay.classList.remove('hidden');
-    }
+    gameOver() {                                                                                                                                                              
+            this.isGameOver = true;                                                                                                                                               
+            this.audio.stopMusic();                                                                                                                                               
+            this.audio.play('game_over');                                                                                                                                         
+                                                                                                                                                                                  
+            // Exibe as telas de fim de jogo do seu script                                                                                                                        
+            if (gameOverOverlay) gameOverOverlay.style.display = 'flex';                                                                                                          
+            if (finalScore) finalScore.textContent = Math.floor(this.score);                                                                                                      
+                                                                                                                                                                                  
+            // ==========================================                                                                                                                         
+            // ADICIONE ESTE BLOCO AQUI ABAIXO:                                                                                                                                   
+            // ==========================================                                                                                                                         
+            if (window.NexusGameSDK) {                                                                                                                                            
+                const pontuacaoFinal = Math.floor(this.score);                                                                                                                    
+                window.NexusGameSDK.submitScore(pontuacaoFinal, {                                                                                                                 
+                    levelReached: "fase_final" // metadados opcionais se quiser salvar no banco                                                                                   
+                });                                                                                                                                                               
+                console.log("Score de Camp Jump enviado ao Nexus:", pontuacaoFinal);                                                                                              
+            }                                                                                                                                                                     
+            // ==========================================                                                                                                                         
+        }
 
     spawnObstacle() {
         const isCone = Math.random() < 0.5;
