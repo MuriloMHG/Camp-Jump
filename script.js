@@ -475,6 +475,7 @@ class Game {
         this.createForestLayer();
         this.player.reset(this.groundY);
         scoreLabel.textContent = '0000';
+        gameOverOverlay.style.display = '';
         gameOverOverlay.classList.add('hidden');
         startOverlay.classList.remove('hidden');
     }
@@ -484,6 +485,7 @@ class Game {
         this.isStarted = true;
         this.isGameOver = false;
         startOverlay.classList.add('hidden');
+        gameOverOverlay.style.display = '';
         gameOverOverlay.classList.add('hidden');
     }
 
@@ -492,9 +494,11 @@ class Game {
             this.audio.stopMusic();                                                                                                                                               
             this.audio.play('game_over');                                                                                                                                         
                                                                                                                                                                                   
-            // Exibe as telas de fim de jogo do seu script                                                                                                                        
-            if (gameOverOverlay) gameOverOverlay.style.display = 'flex';                                                                                                          
-            if (finalScore) finalScore.textContent = Math.floor(this.score);                                                                                                      
+            if (gameOverOverlay) {
+                gameOverOverlay.style.display = '';
+                gameOverOverlay.classList.remove('hidden');
+            }
+            if (finalScore) finalScore.textContent = `Pontuação: ${String(Math.floor(this.score)).padStart(4, '0')}`;                                                                                                      
                                                                                                                                                                                   
             // ==========================================                                                                                                                         
             // ADICIONE ESTE BLOCO AQUI ABAIXO:                                                                                                                                   
